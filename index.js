@@ -8,17 +8,17 @@ ad.start();
 // watch all http servers
 //var browser = mdns.createBrowser(mdns.tcp('http'));
 var sequence = [
-    mdns.rst.DNSServiceResolve(),
-    'DNSServiceGetAddrInfo' in mdns.dns_sd ? mdns.rst.DNSServiceGetAddrInfo() : mdns.rst.getaddrinfo({families:[4]}),
-    mdns.rst.makeAddressesUnique()
+  mdns.rst.DNSServiceResolve(),
+  'DNSServiceGetAddrInfo' in mdns.dns_sd ? mdns.rst.DNSServiceGetAddrInfo() : mdns.rst.getaddrinfo({ families: [4] }),
+  mdns.rst.makeAddressesUnique()
 ];
-var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});
+var browser = mdns.createBrowser(mdns.tcp('http'), { resolverSequence: sequence });
 
-browser.on('serviceUp', function(service) {
+browser.on('serviceUp', function (service) {
   console.log("service up: ", service);
 });
 
-browser.on('serviceDown', function(service) {
+browser.on('serviceDown', function (service) {
   console.log("service down: ", service);
 });
 
@@ -28,7 +28,7 @@ browser.on('serviceDown', function(service) {
 //var all_the_types = mdns.browseThemAll(); // all_the_types is just another browser...
 
 var mqtt = require('mqtt')
-var client  = mqtt.connect('mqtt://10.30.1.101')
+var client = mqtt.connect('mqtt://10.30.1.101')
 
 client.subscribe('building/bell');
 client.subscribe('building/rf');
@@ -37,37 +37,31 @@ var last = '0';
 
 client.on('connect', function () {
   console.log('Connected to MQTT');
-  //client.subscribe('presence')
-
-  setInterval(function() {
-    //console.log('Publish...');
-    //client.publish('building/bell', last)
-
-    last = last === '0' ? '1' : '0';
-  }, 1000);
 })
 
 client.on('message', async function (topic, message) {
   // message is Buffer
-  console.log('Received: ', topic, message.toString())
-  //client.end()
+  console.log('Received: ', topic, message.toString());
 
-  switch (message.toString()) {
-    case "15345183":
-    case "15345182":
-    case "15345175":
-    case "15345174":
-    case "15345179":
-    case "15345178":
-    case "15345171":
-    case "15345170":
-    case "15345181":
-    case "15345180":
-      client.publish('building/bell', '100');
-      await sleep(0.50);
-      client.publish('building/bell', '100');
-      break;
-
+  if (topic === 'building/rf') {
+    // RF remote has these codes hard coded into it.
+    // Send a bell notification when one of them is received.
+    switch (message.toString()) {
+      case "15345183":
+      case "15345182":
+      case "15345175":
+      case "15345174":
+      case "15345179":
+      case "15345178":
+      case "15345171":
+      case "15345170":
+      case "15345181":
+      case "15345180":
+        client.publish('building/bell', '100');
+        await sleep(0.50);
+        client.publish('building/bell', '100');
+        break;
+    }
   }
 })
 
