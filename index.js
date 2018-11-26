@@ -37,6 +37,11 @@ var last = '0';
 
 client.on('connect', function () {
   console.log('Connected to MQTT');
+
+  // Testing the LED strip
+  for (var i = 0; i < 20; i++) {
+    client.publish('building/led-strip', 'p=' + i + ':ffffff');
+  }
 })
 
 client.on('message', async function (topic, message) {
