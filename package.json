@@ -1,0 +1,10 @@
+{
+  "name": "iot-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "mdns": "^2.3.4",
+    "mqtt": "^2.16.0"
+  }
+}
