@@ -35,11 +35,19 @@ client.subscribe('building/rf');
 
 var last = '0';
 
-client.on('connect', function () {
+client.on('connect', async function () {
   console.log('Connected to MQTT');
+
+  await sleep(1);
+
+  client.publish('building/bell', '25');
 
   // Testing the LED strip
   for (var i = 0; i < 20; i++) {
+    await sleep(0.01);
+
+    console.log('LED', i);
+
     client.publish('building/led-strip', 'p=' + i + ':ffffff');
   }
 })
