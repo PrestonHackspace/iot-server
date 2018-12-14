@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "led-server": "ts-node led-server.ts"
+    "led-server": "ts-node src/led-server.ts"
   },
   "devDependencies": {
     "ts-node": "^7.0.1",
